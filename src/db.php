@@ -1,5 +1,5 @@
 <?php
-$databaseUrl = getenv('DATABASE_URL');
+$databaseUrl = getenv('postgresql://project_name_24lm_user:rw3dng1fMKXXPrKV5ET5bXJTZGAy2lNo@dpg-d0ci17mmcj7s73ajkfa0-a/project_name_24lm');
 $parts = parse_url($databaseUrl);
 
 $host = $parts['host'];
