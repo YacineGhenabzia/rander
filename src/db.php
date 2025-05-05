@@ -1,12 +1,17 @@
 <?php
-$host = "db";
-$user = "ecommerce";
-$pass = "ecommerce";
-$db = "ecommerce_db";
+$databaseUrl = getenv('DATABASE_URL');
+$parts = parse_url($databaseUrl);
 
-$conn = new mysqli($host, $user, $pass, $db);
+$host = $parts['host'];
+$port = $parts['port'];
+$user = $parts['user'];
+$pass = $parts['pass'];
+$dbname = ltrim($parts['path'], '/');
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("فشل الاتصال بقاعدة البيانات: " . $e->getMessage());
 }
 ?>
