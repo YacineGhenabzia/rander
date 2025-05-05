@@ -3,10 +3,9 @@ version: '3.8'
 services:
   web:
     build: .
-    container_name: ecommerce_php
     ports:
       - "8080:80"
     volumes:
       - ./src:/var/www/html
     environment:
-      - DATABASE_URL=postgresql://project_name_24lm_user:rw3dng1fMKXXPrKV5ET5bXJTZGAy2lNo@dpg-d0ci17mmcj7s73ajkfa0-a/project_name_24lm
+      - DATABASE_URL=postgresql://prog_z8hq_user:BJO5y77BbqQRHcx2BjsXEtV7t5R1O8kW@dpg-d0cjed15pdvs73a46480-a.oregon-postgres.render.com/prog_z8hq
