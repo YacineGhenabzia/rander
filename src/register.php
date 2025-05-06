@@ -1,21 +1,34 @@
 <?php
-include 'db.php';
+include 'db.php';  // ينشئ المتغيّر $pdo
 
 $success = "";
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
-    $email = $_POST["email"];
+    $email    = $_POST["email"];
     $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $password);
+    // تحضير استعلام الإدراج عبر PDO
+    $stmt = $pdo->prepare("
+        INSERT INTO users (username, email, password)
+        VALUES (:username, :email, :password)
+    ");
+    $stmt->bindParam(':username', $username);
+    $stmt->bindParam(':email',    $email);
+    $stmt->bindParam(':password', $password);
 
-    if ($stmt->execute()) {
+    try {
+        $stmt->execute();
         $success = "Registration successful! <a href='login.php'>Login here</a>";
-    } else {
-        $error = "Error: " . $stmt->error;
+    } catch (PDOException $e) {
+        // يمكنك تحسين الرسالة بحسب رمز الخطأ
+        if ($e->getCode() == '23505') {
+            // 23505 = unique_violation
+            $error = "Username or email already exists.";
+        } else {
+            $error = "Error: " . $e->getMessage();
+        }
     }
 }
 ?>
@@ -82,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php if (!empty($success)): ?>
         <div class="success"><?= $success ?></div>
     <?php elseif (!empty($error)): ?>
-        <div class="error"><?= $error ?></div>
+        <div class="error"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
     <form method="POST">
         <label>Username:</label>
