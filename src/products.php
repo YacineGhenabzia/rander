@@ -1,5 +1,22 @@
 
 
+
+
+<?php
+include 'db.php';
+session_start();
+
+
+
+$search = isset($_GET["search"]) ? $_GET["search"] : "";
+
+$sql = "SELECT * FROM products WHERE name LIKE ?";
+$stmt = $conn->prepare($sql);
+$searchTerm = "%$search%";
+$stmt->bind_param("s", $searchTerm);
+$stmt->execute();
+$result = $stmt->get_result();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
