@@ -1,6 +1,5 @@
 <?php
-$databaseUrl = getenv('DATABASE_URL=postgresql://sql_dq8n_user:7gOw92wwKew0jdv8Iy3LoAafi8aR8n2F@dpg-d0cqepmmcj7s73arg5cg-a/sql_dq8n');
-
+$databaseUrl = getenv('DATABASE_URL');
 if (!$databaseUrl) {
     die("DATABASE_URL غير معرف في البيئة.");
 }
