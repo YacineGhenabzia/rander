@@ -1,17 +1,21 @@
 <?php
-include 'db.php';
+include 'db.php';   // هذا الملف ينشئ المتغيّر $pdo
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
+    // نستخدم PDO لتحضير الاستعلام
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
+    $stmt->bindParam(':username', $username);
     $stmt->execute();
-    $result = $stmt->get_result();
 
-    if ($user = $result->fetch_assoc()) {
+    // جلب نتيجة الاستعلام
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        // التحقق من كلمة المرور المشفّرة
         if (password_verify($password, $user["password"])) {
             $_SESSION["username"] = $user["username"];
             header("Location: products.php");
@@ -79,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="login-container">
     <h2>Login</h2>
     <?php if (!empty($error)): ?>
-        <div class="error"><?= $error ?></div>
+        <div class="error"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
     <form method="POST">
         <label>Username:</label>
