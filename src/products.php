@@ -2,10 +2,7 @@
 include 'db.php';
 session_start();
 
-if (!isset($_SESSION["username"])) {
-    header("Location: login.php");
-    exit();
-}
+
 
 $search = isset($_GET["search"]) ? $_GET["search"] : "";
 
